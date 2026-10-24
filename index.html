@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mahek Fathima | Full-Stack & Generative AI Engineer</title>
+  <meta name="description" content="Portfolio of Mahek Fathima - Full Stack & GenAI Engineer, LLM Security Specialist, 8.20 CGPA, Hackathon Winner.">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            cyber: {
+              bg: '#07070a',
+              card: 'rgba(15, 17, 24, 0.7)',
+              border: 'rgba(255, 255, 255, 0.08)',
+              emerald: '#10b981',
+              cyan: '#06b6d4',
+              violet: '#8b5cf6',
+              accent: '#38bdf8'
+            }
+          },
+          fontFamily: {
+            mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Cabinet Grotesk', 'Inter', 'sans-serif']
+          },
+          animation: {
+            'glow-pulse': 'glowPulse 4s ease-in-out infinite',
+            'scanline': 'scanline 8s linear infinite',
+            'float': 'float 6s ease-in-out infinite'
+          },
+          keyframes: {
+            glowPulse: {
+              '0%, 100%': { opacity: '0.4', filter: 'blur(30px)' },
+              '50%': { opacity: '0.8', filter: 'blur(45px)' }
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-10px)' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons & Three.js -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      cursor: default;
+    }
+    a, button, input, textarea, select {
+      cursor: pointer;
+    }
+    body {
+      background-color: #07070a;
+      color: #e2e8f0;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #07070a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(56, 189, 248, 0.5);
+    }
+    .hud-border {
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.005) 100%);
+    }
+    .hud-border-glow:hover {
+      border-color: rgba(56, 189, 248, 0.35);
+      box-shadow: 0 0 25px rgba(6, 182, 212, 0.12), inset 0 0 15px rgba(139, 92, 246, 0.05);
+    }
+    .grid-bg {
+      background-size: 50px 50px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    }
+    .text-glow {
+      text-shadow: 0 0 20px rgba(56, 189, 248, 0.4);
+    }
+    .text-glitch {
+      background: linear-gradient(135deg, #ffffff 30%, #94a3b8 70%, #38bdf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    /* 3D tilt card styles */
+    .holo-card {
+      transform-style: preserve-3d;
+      transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s ease;
+    }
+  </style>
+</head>
+<body class="min-h-screen relative selection:bg-cyan-500/30 selection:text-cyan-200">
+
+  <!-- Interactive 3D WebGL Background Canvas -->
+  <div id="canvas-container" class="fixed inset-0 pointer-events-none z-0">
+    <canvas id="webgl-core" class="w-full h-full block"></canvas>
+  </div>
+
+  <!-- Ambient Light Orbs & Tech Grid Overlay -->
+  <div class="fixed inset-0 grid-bg pointer-events-none z-0 opacity-40"></div>
+  <div class="fixed top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-cyan-500/10 rounded-full blur-[120px] pointer-events-none animate-glow-pulse z-0"></div>
+  <div class="fixed bottom-[-10%] right-[-10%] w-[55vw] h-[55vw] bg-violet-600/10 rounded-full blur-[140px] pointer-events-none animate-glow-pulse z-0" style="animation-delay: 2s;"></div>
+
+  <!-- Audio Simulation & Mode Floating Pill (Top Bar) -->
+  <header class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-5xl">
+    <nav class="hud-border rounded-full px-5 py-3 flex items-center justify-between shadow-2xl bg-black/40">
+      <!-- Logo / Identity -->
+      <a href="#hero" class="flex items-center gap-2.5 group">
+        <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-500 via-violet-600 to-emerald-400 p-[1px] flex items-center justify-center shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition-transform">
+          <div class="w-full h-full bg-[#09090d] rounded-full flex items-center justify-center">
+            <span class="font-mono text-xs font-black text-cyan-400">MF</span>
+          </div>
+        </div>
+        <div class="flex flex-col">
+          <span class="text-sm font-semibold tracking-tight text-white group-hover:text-cyan-300 transition-colors">Mahek Fathima</span>
+          <span class="text-[10px] font-mono text-zinc-400 flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> SYSTEM ONLINE
+          </span>
+        </div>
+      </a>
+
+      <!-- Navigation Links -->
+      <div class="hidden md:flex items-center gap-1 text-xs font-mono tracking-wide text-zinc-300">
+        <a href="#about" class="px-3 py-1.5 rounded-full hover:text-white hover:bg-white/5 transition-all">01 // ABOUT</a>
+        <a href="#projects" class="px-3 py-1.5 rounded-full hover:text-white hover:bg-white/5 transition-all">02 // HOLODECK</a>
+        <a href="#skills" class="px-3 py-1.5 rounded-full hover:text-white hover:bg-white/5 transition-all">03 // MATRIX</a>
+        <a href="#accolades" class="px-3 py-1.5 rounded-full hover:text-white hover:bg-white/5 transition-all">04 // AWARDS</a>
+      </div>
+
+      <!-- Quick Interactive Action Toggles -->
+      <div class="flex items-center gap-2">
+        <button id="terminal-trigger" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono bg-cyan-950/40 text-cyan-400 border border-cyan-800/50 hover:bg-cyan-900/50 hover:border-cyan-400 transition-all shadow-sm shadow-cyan-500/20" title="Launch Interactive Terminal">
+          <i data-lucide="terminal" class="w-3.5 h-3.5"></i>
+          <span class="hidden sm:inline">CLI_DOSSIER</span>
+        </button>
+        <button id="audio-toggle" class="p-2 rounded-full text-zinc-400 hover:text-white bg-white/5 hover:bg-white/10 transition-colors border border-white/5" title="Toggle Spatial Audio Feedback Simulator">
+          <i data-lucide="volume-2" id="audio-icon" class="w-4 h-4 text-emerald-400"></i>
+        </button>
+        <a href="mailto:mahekfathima31@email.com" class="hidden sm:flex items-center gap-1.5 text-xs font-mono px-3.5 py-1.5 rounded-full bg-white text-black font-medium hover:bg-cyan-300 transition-all shadow-md hover:shadow-cyan-400/30">
+          <i data-lucide="send" class="w-3.5 h-3.5"></i> CONTACT
+        </a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- MAIN SCROLL CONTAINER -->
+  <main class="relative z-10 max-w-6xl mx-auto px-5 sm:px-8 pt-32 sm:pt-40 pb-28">
+
+    <!-- ==================== HERO SECTION ==================== -->
+    <section id="hero" class="min-h-[80vh] flex flex-col justify-center items-start relative pb-16">
+      <!-- Status Badge -->
+      <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full text-xs font-mono tracking-wider hud-border mb-6 bg-white/[0.02]">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+        </span>
+        <span class="text-zinc-300 font-medium">OPEN FOR 2027 HIGH-IMPACT ROLES</span>
+        <span class="text-zinc-600">|</span>
+        <span class="text-cyan-400">GENAI & SYSTEMS</span>
+      </div>
+
+      <!-- Main Editorial Headline -->
+      <h1 class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter uppercase font-display leading-[0.95] mb-6">
+        <span class="text-glitch block">MAHEK</span>
+        <span class="text-zinc-400 font-light italic hover:text-white transition-colors">FATHIMA.</span>
+      </h1>
+
+      <!-- Subtitle & Punchline -->
+      <p class="max-w-2xl text-base sm:text-xl text-zinc-300 font-normal leading-relaxed mb-8">
+        Architecting <span class="text-white font-medium border-b border-cyan-400/40">Generative AI frameworks</span>, 
+        <span class="text-white font-medium border-b border-violet-400/40">LLM security firewalls</span>, and high-throughput 
+        <span class="text-white font-medium border-b border-emerald-400/40">spatial intelligence engines</span>.
+      </p>
+
+      <!-- Key Stat Pills -->
+      <div class="flex flex-wrap items-center gap-2 sm:gap-3 mb-10 text-xs font-mono">
+        <div class="px-3 py-1.5 rounded-lg hud-border bg-white/[0.02] flex items-center gap-2">
+          <i data-lucide="graduation-cap" class="w-3.5 h-3.5 text-cyan-400"></i>
+          <span>8.20 CGPA // MIT MYSURU</span>
+        </div>
+        <div class="px-3 py-1.5 rounded-lg hud-border bg-white/[0.02] flex items-center gap-2">
+          <i data-lucide="briefcase" class="w-3.5 h-3.5 text-violet-400"></i>
+          <span>INTERN @ PENTAGON SPACE</span>
+        </div>
+        <div class="px-3 py-1.5 rounded-lg hud-border bg-white/[0.02] flex items-center gap-2">
+          <i data-lucide="trophy" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span>BUILD FOR BENGALURU WINNER</span>
+        </div>
+        <div class="px-3 py-1.5 rounded-lg hud-border bg-white/[0.02] flex items-center gap-2">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span>CYPHERX '26 1ST PLACE</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-wrap items-center gap-4">
+        <a href="#projects" class="group relative px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-black font-semibold text-sm flex items-center gap-2 shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/40 hover:scale-[1.02] transition-all">
+          <span>EXPLORE HOLO-DECK</span>
+          <i data-lucide="arrow-down-right" class="w-4 h-4 group-hover:translate-x-0.5 group-hover:translate-y-0.5 transition-transform text-black"></i>
+        </a>
+        <button id="hero-resume-btn" class="px-6 py-3.5 rounded-xl hud-border hover:bg-white/10 text-zinc-200 hover:text-white font-medium text-sm flex items-center gap-2 transition-all">
+          <i data-lucide="file-text" class="w-4 h-4 text-cyan-400"></i>
+          <span>INSPECT DOSSIER</span>
+        </button>
+        <button id="interact-core-btn" class="px-4 py-3.5 rounded-xl hud-border text-zinc-400 hover:text-cyan-300 text-xs font-mono flex items-center gap-2 transition-all">
+          <i data-lucide="sparkles" class="w-4 h-4 text-cyan-400 animate-spin"></i>
+          <span>PULSE 3D CORE</span>
+        </button>
+      </div>
+
+      <!-- Scroll indicator -->
+      <div class="absolute bottom-4 right-2 hidden md:flex items-center gap-2 text-[10px] font-mono text-zinc-400 tracking-widest uppercase">
+        <span>SCROLL TO DIVE</span>
+        <div class="w-6 h-10 rounded-full border border-zinc-700 flex justify-center p-1">
+          <div class="w-1 h-2 bg-cyan-400 rounded-full animate-bounce"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== ABOUT & INTERNSHIP BRIEF ==================== -->
+    <section id="about" class="py-20 border-t border-white/[0.06]">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left: Editorial Headline -->
+        <div class="lg:col-span-5">
+          <div class="flex items-center gap-2 text-xs font-mono text-cyan-400 mb-3">
+            <span>// 01 ARCHITECTURAL PHILOSOPHY</span>
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-white mb-6 font-display">
+            Grounding probabilistic AI in mathematical determinism.
+          </h2>
+          <p class="text-sm text-zinc-400 leading-relaxed mb-6">
+            Final-year Information Science Engineer at Maharaja Institute of Technology Mysuru with an 8.20 CGPA. I specialize in closing the chasm between raw LLM inference and enterprise-grade reliability through adversarial mitigation, semantic drift inspection, and micro-spatial optimization.
+          </p>
+
+          <div class="flex items-center gap-4 text-xs font-mono text-zinc-400">
+            <div>
+              <span class="block text-2xl font-bold text-white font-sans">8.20</span>
+              <span>CUMULATIVE CGPA</span>
+            </div>
+            <div class="h-8 w-px bg-white/10"></div>
+            <div>
+              <span class="block text-2xl font-bold text-cyan-400 font-sans">3+</span>
+              <span>FLAGSHIP AI SYSTEMS</span>
+            </div>
+            <div class="h-8 w-px bg-white/10"></div>
+            <div>
+              <span class="block text-2xl font-bold text-emerald-400 font-sans">2x</span>
+              <span>CHAMPIONSHIPS</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Current Experience Card (Pentagon Space) -->
+        <div class="lg:col-span-7 hud-border rounded-2xl p-6 sm:p-8 relative overflow-hidden group">
+          <div class="absolute top-0 right-0 w-48 h-48 bg-violet-500/10 rounded-full blur-3xl pointer-events-none group-hover:bg-violet-500/20 transition-all"></div>
+          
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+            <span class="px-3 py-1 rounded-full text-[11px] font-mono bg-violet-500/10 text-violet-400 border border-violet-500/20">
+              ACTIVE ENGAGEMENT // INDUSTRY EXPERIENCE
+            </span>
+            <span class="text-xs font-mono text-zinc-400">Sep 2026 – Present</span>
+          </div>
+
+          <h3 class="text-xl sm:text-2xl font-bold text-white mb-1">Python Full Stack Intern</h3>
+          <p class="text-sm text-cyan-400 font-mono mb-4">Pentagon Space • Bengaluru / Hybrid</p>
+
+          <ul class="space-y-3 text-sm text-zinc-300">
+            <li class="flex items-start gap-2.5">
+              <i data-lucide="chevron-right" class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5"></i>
+              <span>Architect asynchronous high-throughput REST APIs using <strong>FastAPI</strong> and Python to orchestrate core internal microservices.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <i data-lucide="chevron-right" class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5"></i>
+              <span>Engineer modular frontend components and optimize complex SQL queries to eliminate bottlenecks across end-to-end data retrieval pipelines.</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <i data-lucide="chevron-right" class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5"></i>
+              <span>Implement rigorous API schema contracts, automated testing suites, and OpenAPI specs across backend application workflows.</span>
+            </li>
+          </ul>
+
+          <div class="mt-6 pt-4 border-t border-white/5 flex flex-wrap gap-2 text-xs font-mono">
+            <span class="px-2.5 py-1 rounded-md bg-white/5 text-zinc-300">Python 3.12</span>
+            <span class="px-2.5 py-1 rounded-md bg-white/5 text-zinc-300">FastAPI</span>
+            <span class="px-2.5 py-1 rounded-md bg-white/5 text-zinc-300">PostgreSQL</span>
+            <span class="px-2.5 py-1 rounded-md bg-white/5 text-zinc-300">AsyncIO</span>
+            <span class="px-2.5 py-1 rounded-md bg-white/5 text-zinc-300">Docker</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== PROJECT HOLODECK ==================== -->
+    <section id="projects" class="py-20 border-t border-white/[0.06]">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-12">
+        <div>
+          <div class="flex items-center gap-2 text-xs font-mono text-cyan-400 mb-2">
+            <span>// 02 MISSION PIPELINES</span>
+          </div>
+          <h2 class="text-3xl sm:text-5xl font-black tracking-tight text-white font-display">
+            FEATURED HOLO-DECK
+          </h2>
+        </div>
+        <p class="text-xs font-mono text-zinc-400 mt-2 sm:mt-0 max-w-xs text-left sm:text-right">
+          Click any telemetry capsule to launch live architectural inspection & diagnostics modal.
+        </p>
+      </div>
+
+      <!-- Project Cards Grid with 3D Tilt -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+        
+        <!-- Project 1: Memory Mirage -->
+        <div class="holo-card hud-border hud-border-glow rounded-2xl p-6 sm:p-8 flex flex-col justify-between relative group cursor-pointer" onclick="openProjectModal('memoryMirage')">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs font-mono px-2.5 py-1 rounded bg-red-500/10 text-red-400 border border-red-500/20 flex items-center gap-1.5">
+                <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i> AI SAFETY & ADVERSARIAL DEFENSE
+              </span>
+              <span class="text-xs font-mono text-zinc-400">2026</span>
+            </div>
+            <h3 class="text-2xl font-bold text-white group-hover:text-cyan-300 transition-colors mb-2">
+              Memory Mirage
+            </h3>
+            <p class="text-xs font-mono text-cyan-400 mb-4">
+              LLM Hallucination Mitigation & Adversarial Security Framework
+            </p>
+            <p class="text-sm text-zinc-300 line-clamp-3 mb-6">
+              Designed an automated security firewall engine engineered to evaluate factual reliability, suppress hallucination drift via Shannon Token Entropy, and safeguard production LLM pipelines against prompt injection.
+            </p>
+          </div>
+
+          <div>
+            <div class="flex flex-wrap gap-1.5 mb-6 text-[11px] font-mono">
+              <span class="px-2 py-0.5 rounded bg-white/5 text-zinc-300">FastAPI</span>
+              <span class="px-2 py-0.5 rounded bg-white/5 text-zinc-300">ChromaDB</span>
+              <span class="px-2 py-0.5 rounded bg-white/5 text-zinc-300">Sentence-Transformers</span>
+              <span class="px-2 py-0.5 rounded bg-white/5 text-zinc-300">Entropy Scorer</span>
+            </div>
+            <div class="flex items-center justify-between pt-4 border-t border-white/5 text-xs font-mono">
+              <span class="text-cyan-400 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                OPEN HUD TELEMETRY <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </span>
+              <span class="text-zinc-400">RAG GROUNDING: 99.4%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 2: Pacha Cover -->
+        <div class="holo-card hud-border hud-border-glow rounded-2xl p-6 sm:p-8 flex flex-col justify-between relative group cursor-pointer" onclick="openProjectModal('pachaCover')">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs font-mono px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1.5">
+                <i data-lucide="satellite" class="w-3.5 h-3.5"></i> GEOSPATIAL AI & SATELLITE RADAR
+              </span>
+              <span class="text-xs font-mono text-zinc-400">2026</span>
+            </div>
+            <h3 class="text-2xl font-bold text-white group-hover:text-emerald-300 transition-colors mb-2">
+              Pacha Cover
+            </h3>
+            <p class="text-xs font-mono text-emerald-400 mb-4">
+              Geospatial AI & Urban Canopy Restoration Platform
+            </p>
+            <p class="text-sm text-zinc-300 line-clamp-3 mb-6">
+              Combatting Bengaluru's urban heat islands by coupling Google Earth Engine for multispectral canopy analysis with Gemini 1.5 Flash to generate botanical precision prescriptions across 198 BBMP wards.
+            </p>
+          </div>
+
+          <div>
+            <div class="flex flex-wrap gap-1.5 mb-6 text-[11px] font-mono">
+              <span class="px-2 py-0.5 rounded bg-white/5 text-zinc-300">Google Earth Engine</span>
+              <span class="px-2 py-0.5 rounded bg-white/5 text-zinc-300">Gemini 1.5 Flash</span>
+              <span class="px-2 py-0.5 rounded bg-white/5 text-zinc-300">Vertex AI Vision</span>
+              <span class="px-2 py-0.5 rounded bg-white/5 text-zinc-300">Cloud Run</span>
+            </div>
+            <div class="flex items-center justify-between pt-4 border-t border-white/5 text-xs font-mono">
+              <span class="text-emerald-400 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                OPEN HUD TELEMETRY <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </span>
+              <span class="text-zinc-400">198 WARDS MONITORED</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 3: Swachh Connect -->
+        <div class="holo-card hud-border hud-border-glow rounded-2xl p-6 sm:p-8 flex flex-col justify-between relative group cursor-pointer" onclick="openProjectModal('swachhConnect')">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs font-mono px-2.5 py-1 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center gap-1.5">
+                <i data-lucide="map-pin" class="w-3.5 h-3.5"></i> CIVIC VISION & FINTECH MICRO-PAYOUTS
+              </span>
+              <span class="text-xs font-mono text-zinc-400">2026</span>
+            </div>
+            <h3 class="text-2xl font-bold text-white group-hover:text-amber-300 transition-colors mb-2">
+              Swachh Connect
+            </h3>
+            <p class="text-xs font-mono text-amber-400 mb-4">
+              Crowdsourced Civic Waste AI Platform
+            </p>
+            <p class="text-sm text-zinc-300 line-clamp-3 mb-6">
+              Zero-CAPEX software replacement for Mysuru's stalled ₹50 Lakh CCTV plan. Deployed PyTorch solid waste detection (≥85% conf), EXIF GPS anti-tamper extraction, and spatial micro-tendering via PostGIS.
+            </p>
+          </div>
+
+          <div>
+            <div class="flex flex-wrap gap-1.5 mb-6 text-[11px] font-mono">
+              <span class="px-2 py-0.5 rounded bg-white/5 text-zinc-300">PyTorch</span>
+              <span class="px-2 py-0.5 rounded bg-white/5 text-zinc-300">PostGIS (ST_DWithin)</span>
+              <span class="px-2 py-0.5 rounded bg-white/5 text-zinc-300">FastAPI</span>
+              <span class="px-2 py-0.5 rounded bg-white/5 text-zinc-300">RazorpayX UPI</span>
+            </div>
+            <div class="flex items-center justify-between pt-4 border-t border-white/5 text-xs font-mono">
+              <span class="text-amber-400 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                OPEN HUD TELEMETRY <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </span>
+              <span class="text-zinc-400">133 VULNERABLE SITES</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Project 4: DiabetIQ & Slice -->
+        <div class="holo-card hud-border hud-border-glow rounded-2xl p-6 sm:p-8 flex flex-col justify-between relative group cursor-pointer" onclick="openProjectModal('diabetIq')">
+          <div>
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-xs font-mono px-2.5 py-1 rounded bg-violet-500/10 text-violet-400 border border-violet-500/20 flex items-center gap-1.5">
+                <i data-lucide="activity" class="w-3.5 h-3.5"></i> EXPLAINABLE AI & OCR INTELLIGENCE
+              </span>
+              <span class="text-xs font-mono text-zinc-400">2025</span>
+            </div>
+            <h3 class="text-2xl font-bold text-white group-hover:text-violet-300 transition-colors mb-2">
+              DiabetIQ & Slice
+            </h3>
+            <p class="text-xs font-mono text-violet-400 mb-4">
+              Multimodal Diagnostics & Bill Decomposition Engine
+            </p>
+            <p class="text-sm text-zinc-300 line-clamp-3 mb-6">
+              Dual-core initiative: An explainable clinical risk classifier using XGBoost with SHAP attribution plots, alongside an OCR receipt partitioner using PaddleOCR with automated split settlements.
+            </p>
+          </div>
+
+          <div>
+            <div class="flex flex-wrap gap-1.5 mb-6 text-[11px] font-mono">
+              <span class="px-2 py-0.5 rounded bg-white/5 text-zinc-300">XGBoost</span>
+              <span class="px-2 py-0.5 rounded bg-white/5 text-zinc-300">SHAP Analysis</span>
+              <span class="px-2 py-0.5 rounded bg-white/5 text-zinc-300">PaddleOCR</span>
+              <span class="px-2 py-0.5 rounded bg-white/5 text-zinc-300">Streamlit</span>
+            </div>
+            <div class="flex items-center justify-between pt-4 border-t border-white/5 text-xs font-mono">
+              <span class="text-violet-400 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                OPEN HUD TELEMETRY <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </span>
+              <span class="text-zinc-400">XAI TRANSPARENCY</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== SKILL CONSTELLATION BENTO GRID ==================== -->
+    <section id="skills" class="py-20 border-t border-white/[0.06]">
+      <div class="flex items-center gap-2 text-xs font-mono text-cyan-400 mb-2">
+        <span>// 03 TECHNICAL CAPABILITY MATRIX</span>
+      </div>
+      <h2 class="text-3xl sm:text-5xl font-black tracking-tight text-white mb-10 font-display">
+        NEURAL ARSENAL
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        
+        <!-- Category 1: Backend Systems -->
+        <div class="hud-border rounded-xl p-6 flex flex-col justify-between">
+          <div>
+            <div class="w-10 h-10 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 mb-4">
+              <i data-lucide="server" class="w-5 h-5"></i>
+            </div>
+            <h3 class="text-base font-bold text-white mb-1">Backend & Languages</h3>
+            <p class="text-xs text-zinc-400 font-mono mb-4">Deterministic & Asynchronous</p>
+            
+            <div class="space-y-3">
+              <div>
+                <div class="flex justify-between text-xs font-mono mb-1">
+                  <span class="text-zinc-300">Python (FastAPI / Django)</span>
+                  <span class="text-cyan-400">95%</span>
+                </div>
+                <div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+                  <div class="bg-cyan-400 h-full w-[95%]"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-xs font-mono mb-1">
+                  <span class="text-zinc-300">SQL & Relational DBs</span>
+                  <span class="text-cyan-400">88%</span>
+                </div>
+                <div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+                  <div class="bg-cyan-400 h-full w-[88%]"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-xs font-mono mb-1">
+                  <span class="text-zinc-300">JS / ES Modules & REST</span>
+                  <span class="text-cyan-400">85%</span>
+                </div>
+                <div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+                  <div class="bg-cyan-400 h-full w-[85%]"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-6 pt-3 border-t border-white/5 text-[11px] font-mono text-zinc-400">
+            Microservice Orchestration
+          </div>
+        </div>
+
+        <!-- Category 2: AI / ML & GenAI -->
+        <div class="hud-border rounded-xl p-6 flex flex-col justify-between">
+          <div>
+            <div class="w-10 h-10 rounded-lg bg-violet-500/10 border border-violet-500/30 flex items-center justify-center text-violet-400 mb-4">
+              <i data-lucide="brain-circuit" class="w-5 h-5"></i>
+            </div>
+            <h3 class="text-base font-bold text-white mb-1">AI / ML & GenAI</h3>
+            <p class="text-xs text-zinc-400 font-mono mb-4">RAG & Tensor Computing</p>
+            
+            <div class="space-y-3">
+              <div>
+                <div class="flex justify-between text-xs font-mono mb-1">
+                  <span class="text-zinc-300">Gemini 1.5 & LangChain</span>
+                  <span class="text-violet-400">92%</span>
+                </div>
+                <div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+                  <div class="bg-violet-400 h-full w-[92%]"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-xs font-mono mb-1">
+                  <span class="text-zinc-300">ChromaDB / Vector RAG</span>
+                  <span class="text-violet-400">90%</span>
+                </div>
+                <div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+                  <div class="bg-violet-400 h-full w-[90%]"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-xs font-mono mb-1">
+                  <span class="text-zinc-300">PyTorch & TorchVision</span>
+                  <span class="text-violet-400">84%</span>
+                </div>
+                <div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+                  <div class="bg-violet-400 h-full w-[84%]"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-6 pt-3 border-t border-white/5 text-[11px] font-mono text-zinc-400">
+            Entropy-Based Hallucination Guards
+          </div>
+        </div>
+
+        <!-- Category 3: Cloud, Spatial & Infra -->
+        <div class="hud-border rounded-xl p-6 flex flex-col justify-between">
+          <div>
+            <div class="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mb-4">
+              <i data-lucide="globe-2" class="w-5 h-5"></i>
+            </div>
+            <h3 class="text-base font-bold text-white mb-1">Spatial & Cloud</h3>
+            <p class="text-xs text-zinc-400 font-mono mb-4">GIS Telemetry & Serverless</p>
+            
+            <div class="space-y-3">
+              <div>
+                <div class="flex justify-between text-xs font-mono mb-1">
+                  <span class="text-zinc-300">Google Earth Engine</span>
+                  <span class="text-emerald-400">89%</span>
+                </div>
+                <div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+                  <div class="bg-emerald-400 h-full w-[89%]"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-xs font-mono mb-1">
+                  <span class="text-zinc-300">PostGIS (Spatial ST_*)</span>
+                  <span class="text-emerald-400">86%</span>
+                </div>
+                <div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+                  <div class="bg-emerald-400 h-full w-[86%]"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-xs font-mono mb-1">
+                  <span class="text-zinc-300">GCP Cloud Run & Docker</span>
+                  <span class="text-emerald-400">82%</span>
+                </div>
+                <div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+                  <div class="bg-emerald-400 h-full w-[82%]"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-6 pt-3 border-t border-white/5 text-[11px] font-mono text-zinc-400">
+            Real-Time Satellite Feeds
+          </div>
+        </div>
+
+        <!-- Category 4: Agentic & Security -->
+        <div class="hud-border rounded-xl p-6 flex flex-col justify-between">
+          <div>
+            <div class="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 mb-4">
+              <i data-lucide="shield" class="w-5 h-5"></i>
+            </div>
+            <h3 class="text-base font-bold text-white mb-1">Agentic & Security</h3>
+            <p class="text-xs text-zinc-400 font-mono mb-4">Autonomy & Adversarial CTF</p>
+            
+            <div class="space-y-3">
+              <div>
+                <div class="flex justify-between text-xs font-mono mb-1">
+                  <span class="text-zinc-300">Agentic Workflows</span>
+                  <span class="text-amber-400">92%</span>
+                </div>
+                <div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+                  <div class="bg-amber-400 h-full w-[92%]"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-xs font-mono mb-1">
+                  <span class="text-zinc-300">Google Antigravity & Claude</span>
+                  <span class="text-amber-400">94%</span>
+                </div>
+                <div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+                  <div class="bg-amber-400 h-full w-[94%]"></div>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between text-xs font-mono mb-1">
+                  <span class="text-zinc-300">LLM Security & Red Teaming</span>
+                  <span class="text-amber-400">88%</span>
+                </div>
+                <div class="w-full bg-white/5 h-1.5 rounded-full overflow-hidden">
+                  <div class="bg-amber-400 h-full w-[88%]"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-6 pt-3 border-t border-white/5 text-[11px] font-mono text-zinc-400">
+            Prompt Injection Hardening
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== ACCOLADES & TROPHIES ==================== -->
+    <section id="accolades" class="py-20 border-t border-white/[0.06]">
+      <div class="flex items-center gap-2 text-xs font-mono text-cyan-400 mb-2">
+        <span>// 04 VALIDATION & RECOGNITION</span>
+      </div>
+      <h2 class="text-3xl sm:text-5xl font-black tracking-tight text-white mb-10 font-display">
+        HONORS & CITATIONS
+      </h2>
+
+      <div class="space-y-4">
+        
+        <!-- Award 1 -->
+        <div class="hud-border rounded-xl p-6 sm:p-7 flex flex-col md:flex-row md:items-center justify-between gap-4 group hover:bg-white/[0.02] transition-colors">
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+              <i data-lucide="award" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-xs font-mono text-amber-400 font-semibold tracking-wide">TOP PROJECT // PREMIER CITATION</span>
+                <span class="text-zinc-600">•</span>
+                <span class="text-xs font-mono text-zinc-400">2026</span>
+              </div>
+              <h3 class="text-xl font-bold text-white group-hover:text-amber-300 transition-colors">
+                Award of Excellence — Build for Bengaluru Hackathon
+              </h3>
+              <p class="text-sm text-zinc-400 mt-1 max-w-2xl">
+                Ranked among top builds out of 2,000+ participants and 500+ competing engineering teams across Karnataka. Organized by GDG Bangalore, Rotaract Club of Bangalore, and REVA University.
+              </p>
+            </div>
+          </div>
+          <div class="text-right shrink-0">
+            <span class="inline-flex px-3 py-1 rounded-full text-xs font-mono bg-amber-500/10 text-amber-300 border border-amber-500/20">
+              GDG Bangalore Verified
+            </span>
+          </div>
+        </div>
+
+        <!-- Award 2 -->
+        <div class="hud-border rounded-xl p-6 sm:p-7 flex flex-col md:flex-row md:items-center justify-between gap-4 group hover:bg-white/[0.02] transition-colors">
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0">
+              <i data-lucide="crown" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-xs font-mono text-cyan-400 font-semibold tracking-wide">1ST PLACE CHAMPION</span>
+                <span class="text-zinc-600">•</span>
+                <span class="text-xs font-mono text-zinc-400">2026</span>
+              </div>
+              <h3 class="text-xl font-bold text-white group-hover:text-cyan-300 transition-colors">
+                CypherX Cybersecurity Competition
+              </h3>
+              <p class="text-sm text-zinc-400 mt-1 max-w-2xl">
+                Finished 1st Place at Maharaja Institute of Technology Mysuru. Solved complex challenges in cryptographic cipher breaking, image steganography, memory forensics, and web vulnerability exploitation.
+              </p>
+            </div>
+          </div>
+          <div class="text-right shrink-0">
+            <span class="inline-flex px-3 py-1 rounded-full text-xs font-mono bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
+              CTF Master
+            </span>
+          </div>
+        </div>
+
+        <!-- Award 3 -->
+        <div class="hud-border rounded-xl p-6 sm:p-7 flex flex-col md:flex-row md:items-center justify-between gap-4 group hover:bg-white/[0.02] transition-colors">
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 rounded-xl bg-violet-500/10 border border-violet-500/30 flex items-center justify-center text-violet-400 shrink-0">
+              <i data-lucide="sparkles" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-xs font-mono text-violet-400 font-semibold tracking-wide">ACADEMIC DISTINCTION</span>
+                <span class="text-zinc-600">•</span>
+                <span class="text-xs font-mono text-zinc-400">2025</span>
+              </div>
+              <h3 class="text-xl font-bold text-white group-hover:text-violet-300 transition-colors">
+                EthnoTech Generative AI Program — Award of Excellence
+              </h3>
+              <p class="text-sm text-zinc-400 mt-1 max-w-2xl">
+                Recognized for rapid prototyping of agentic RAG architectures, custom instruction tuning, and production pipeline deployment with high benchmark precision.
+              </p>
+            </div>
+          </div>
+          <div class="text-right shrink-0">
+            <span class="inline-flex px-3 py-1 rounded-full text-xs font-mono bg-violet-500/10 text-violet-300 border border-violet-500/20">
+              GenAI Certified
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== FOOTER & TRANSMISSION DOCK ==================== -->
+    <footer class="mt-20 pt-16 border-t border-white/[0.08] relative">
+      <div class="hud-border rounded-3xl p-8 sm:p-12 text-center relative overflow-hidden bg-gradient-to-b from-white/[0.03] to-transparent">
+        <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-96 h-48 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <span class="inline-block px-3.5 py-1 rounded-full text-xs font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-4">
+          TRANSMISSION READY // OPEN TO CONNECT
+        </span>
+        
+        <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight mb-4 font-display">
+          LET'S CONSTRUCT THE NEXT PARADIGM.
+        </h2>
+        
+        <p class="max-w-lg mx-auto text-sm text-zinc-400 mb-8 font-mono">
+          Ready for forward-looking engineering roles, agentic AI development, and scalable backend challenges.
+        </p>
+
+        <div class="flex flex-wrap items-center justify-center gap-4">
+          <button id="copy-email-btn" class="px-6 py-3.5 rounded-xl bg-white text-black font-semibold text-sm flex items-center gap-2 hover:bg-cyan-300 transition-all shadow-lg shadow-white/10">
+            <i data-lucide="copy" class="w-4 h-4"></i>
+            <span id="copy-email-text">COPY: mahekfathima31@email.com</span>
+          </button>
+          
+          <a href="https://linkedin.com/in/mahekfathima" target="_blank" rel="noopener noreferrer" class="px-5 py-3.5 rounded-xl hud-border text-zinc-200 hover:text-white hover:bg-white/10 text-sm font-mono flex items-center gap-2 transition-all">
+            <i data-lucide="linkedin" class="w-4 h-4 text-cyan-400"></i>
+            <span>LINKEDIN</span>
+          </a>
+
+          <a href="https://github.com/mahekfathima" target="_blank" rel="noopener noreferrer" class="px-5 py-3.5 rounded-xl hud-border text-zinc-200 hover:text-white hover:bg-white/10 text-sm font-mono flex items-center gap-2 transition-all">
+            <i data-lucide="github" class="w-4 h-4 text-violet-400"></i>
+            <span>GITHUB</span>
+          </a>
+        </div>
+
+        <div class="mt-12 pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-zinc-400 gap-4">
+          <div>
+            © 2026 MAHEK FATHIMA • MYSURU, KARNATAKA, INDIA
+          </div>
+          <div class="flex items-center gap-3">
+            <span>ENGINEERED WITH THREE.JS & TAILWIND</span>
+            <span class="text-zinc-600">/</span>
+            <span class="text-emerald-400 flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> 60 FPS
+            </span>
+          </div>
+        </div>
+
+      </div>
+    </footer>
+
+  </main>
+
+  <!-- ==================== INTERACTIVE CLI TERMINAL MODAL ==================== -->
+  <div id="terminal-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="w-full max-w-2xl bg-[#0b0c10] border border-cyan-500/40 rounded-xl shadow-2xl overflow-hidden font-mono flex flex-col h-[520px]">
+      
+      <!-- Terminal Header -->
+      <div class="bg-zinc-900/90 px-4 py-2.5 flex items-center justify-between border-b border-white/10">
+        <div class="flex items-center gap-2">
+          <span class="w-3 h-3 rounded-full bg-red-500/80 inline-block"></span>
+          <span class="w-3 h-3 rounded-full bg-yellow-500/80 inline-block"></span>
+          <span class="w-3 h-3 rounded-full bg-green-500/80 inline-block"></span>
+          <span class="text-xs text-zinc-400 ml-2">mahek@cyber-core: ~ (bash)</span>
+        </div>
+        <button id="close-terminal-btn" class="text-zinc-400 hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <!-- Terminal Output Screen -->
+      <div id="terminal-history" class="p-4 flex-1 overflow-y-auto space-y-2 text-xs text-zinc-300">
+        <p class="text-cyan-400">MAHEK FATHIMA // NEURAL SHELL v2.6.4</p>
+        <p class="text-zinc-400">Type <span class="text-white font-bold underline">help</span> or click suggestions below to inspect systems:</p>
+        <div class="flex flex-wrap gap-2 py-1">
+          <button class="cli-chip px-2 py-0.5 rounded bg-white/5 hover:bg-white/10 text-cyan-300 border border-cyan-500/30" onclick="runCliCommand('whoami')">whoami</button>
+          <button class="cli-chip px-2 py-0.5 rounded bg-white/5 hover:bg-white/10 text-cyan-300 border border-cyan-500/30" onclick="runCliCommand('cat skills')">cat skills</button>
+          <button class="cli-chip px-2 py-0.5 rounded bg-white/5 hover:bg-white/10 text-cyan-300 border border-cyan-500/30" onclick="runCliCommand('ls projects')">ls projects</button>
+          <button class="cli-chip px-2 py-0.5 rounded bg-white/5 hover:bg-white/10 text-cyan-300 border border-cyan-500/30" onclick="runCliCommand('curl resume')">curl resume</button>
+          <button class="cli-chip px-2 py-0.5 rounded bg-white/5 hover:bg-white/10 text-cyan-300 border border-cyan-500/30" onclick="runCliCommand('clear')">clear</button>
+        </div>
+      </div>
+
+      <!-- Terminal Input Line -->
+      <div class="p-3 bg-zinc-950/80 border-t border-white/10 flex items-center gap-2 text-xs">
+        <span class="text-emerald-400 font-bold">visitor@mahek:~$</span>
+        <input id="terminal-input" type="text" class="flex-1 bg-transparent text-white focus:outline-none" placeholder="Type 'help' or command..." autocomplete="off">
+        <button onclick="handleTerminalSubmit()" class="text-xs text-cyan-400 hover:underline">ENTER</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== PROJECT HUD INSPECTION MODAL ==================== -->
+  <div id="project-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
+    <div class="w-full max-w-3xl bg-[#090a0f] border border-cyan-500/30 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+      
+      <!-- Modal Header -->
+      <div class="p-5 border-b border-white/10 flex items-center justify-between bg-white/[0.02]">
+        <div class="flex items-center gap-3">
+          <div id="modal-badge-icon" class="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+            <i data-lucide="layers" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <h3 id="modal-title" class="text-lg font-bold text-white">Project Title</h3>
+            <p id="modal-subtitle" class="text-xs font-mono text-cyan-400">Architecture Subtitle</p>
+          </div>
+        </div>
+        <button id="close-project-modal-btn" class="p-2 rounded-lg bg-white/5 text-zinc-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6 overflow-y-auto space-y-6 text-sm text-zinc-300">
+        <div>
+          <h4 class="text-xs font-mono text-zinc-400 uppercase tracking-wider mb-2">// TECHNICAL ARCHITECTURE & OBJECTIVE</h4>
+          <p id="modal-description" class="leading-relaxed"></p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="p-4 rounded-xl bg-white/[0.02] border border-white/5">
+            <h5 class="text-xs font-mono text-cyan-400 mb-2">// KEY HIGHLIGHTS</h5>
+            <ul id="modal-bullets" class="space-y-2 text-xs"></ul>
+          </div>
+          <div class="p-4 rounded-xl bg-white/[0.02] border border-white/5">
+            <h5 class="text-xs font-mono text-violet-400 mb-2">// SYSTEM METRICS</h5>
+            <div id="modal-metrics" class="space-y-2 text-xs font-mono"></div>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-xs font-mono text-zinc-400 uppercase tracking-wider mb-2">// COMPONENT STACK</h4>
+          <div id="modal-tags" class="flex flex-wrap gap-2 text-xs font-mono"></div>
+        </div>
+      </div>
+
+      <!-- Modal Footer Actions -->
+      <div class="p-4 border-t border-white/10 bg-white/[0.01] flex items-center justify-between">
+        <span class="text-xs font-mono text-zinc-400">STATUS: PRODUCTION-GRADE</span>
+        <div class="flex items-center gap-3">
+          <a href="https://github.com/mahekfathima" target="_blank" rel="noopener noreferrer" class="px-4 py-2 rounded-lg hud-border text-xs font-mono text-white hover:bg-white/10 flex items-center gap-2">
+            <i data-lucide="github" class="w-3.5 h-3.5 text-cyan-400"></i> SOURCE
+          </a>
+          <button onclick="closeProjectModal()" class="px-4 py-2 rounded-lg bg-white text-black text-xs font-mono font-bold hover:bg-cyan-300 transition-colors">
+            CLOSE HUD
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== JAVASCRIPT: THREE.JS ENGINE & APP LOGIC ==================== -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    /* ========================================================
+       1. THREE.JS 3D CYBERNETIC NEURAL CORE SIMULATION
+    ======================================================== */
+    let scene, camera, renderer, coreMesh, particleSystem, wireframeMesh, ringGroup;
+    let targetRotationX = 0, targetRotationY = 0;
+    let mouseX = 0, mouseY = 0;
+    const canvas = document.getElementById('webgl-core');
+
+    function initThree() {
+      // Scene
+      scene = new THREE.Scene();
+
+      // Camera
+      camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.z = 7;
+
+      // Renderer
+      renderer = new THREE.WebGLRenderer({
+        canvas: canvas,
+        alpha: true,
+        antialias: true
+      });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      // Central Quantum Core: Icosahedron with Wireframe & Glow
+      const coreGeometry = new THREE.IcosahedronGeometry(2.2, 1);
+      
+      // Outer glassy wireframe
+      const wireframeGeometry = new THREE.WireframeGeometry(coreGeometry);
+      const wireframeMaterial = new THREE.LineBasicMaterial({
+        color: 0x38bdf8,
+        transparent: true,
+        opacity: 0.35
+      });
+      wireframeMesh = new THREE.LineSegments(wireframeGeometry, wireframeMaterial);
+      scene.add(wireframeMesh);
+
+      // Inner Core Solid (Torus Knot)
+      const innerGeom = new THREE.TorusKnotGeometry(1.2, 0.35, 100, 16);
+      const innerMat = new THREE.MeshStandardMaterial({
+        color: 0x1e1b4b,
+        emissive: 0x06b6d4,
+        emissiveIntensity: 0.25,
+        roughness: 0.2,
+        metalness: 0.9,
+        wireframe: true
+      });
+      coreMesh = new THREE.Mesh(innerGeom, innerMat);
+      scene.add(coreMesh);
+
+      // Orbiting Particle Neural Rings
+      ringGroup = new THREE.Group();
+      const ringParticleCount = 600;
+      const ringGeo = new THREE.BufferGeometry();
+      const ringPositions = new Float32Array(ringParticleCount * 3);
+      const ringColors = new Float32Array(ringParticleCount * 3);
+
+      const color1 = new THREE.Color(0x38bdf8); // Cyan
+      const color2 = new THREE.Color(0x8b5cf6); // Violet
+      const color3 = new THREE.Color(0x10b981); // Emerald
+
+      for (let i = 0; i < ringParticleCount; i++) {
+        const theta = (i / ringParticleCount) * Math.PI * 2;
+        const radius = 3.6 + (Math.random() - 0.5) * 1.0;
+        
+        ringPositions[i * 3] = Math.cos(theta) * radius;
+        ringPositions[i * 3 + 1] = (Math.random() - 0.5) * 0.8;
+        ringPositions[i * 3 + 2] = Math.sin(theta) * radius;
+
+        const mixedColor = Math.random() > 0.6 ? color1 : (Math.random() > 0.3 ? color2 : color3);
+        ringColors[i * 3] = mixedColor.r;
+        ringColors[i * 3 + 1] = mixedColor.g;
+        ringColors[i * 3 + 2] = mixedColor.b;
+      }
+
+      ringGeo.setAttribute('position', new THREE.BufferAttribute(ringPositions, 3));
+      ringGeo.setAttribute('color', new THREE.BufferAttribute(ringColors, 3));
+
+      const ringMat = new THREE.PointsMaterial({
+        size: 0.045,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.85
+      });
+
+      particleSystem = new THREE.Points(ringGeo, ringMat);
+      ringGroup.add(particleSystem);
+      scene.add(ringGroup);
+
+      // Subtle ambient & point lights
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+      scene.add(ambientLight);
+
+      const cyanPoint = new THREE.PointLight(0x06b6d4, 2, 20);
+      cyanPoint.position.set(5, 5, 5);
+      scene.add(cyanPoint);
+
+      const violetPoint = new THREE.PointLight(0x8b5cf6, 2, 20);
+      violetPoint.position.set(-5, -5, -2);
+      scene.add(violetPoint);
+
+      // Event Listeners
+      window.addEventListener('resize', onWindowResize);
+      document.addEventListener('mousemove', onMouseMove);
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    function onMouseMove(event) {
+      mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+      mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+      targetRotationY = mouseX * 0.8;
+      targetRotationX = mouseY * 0.5;
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      // Continuous Idle Rotation
+      if (coreMesh) {
+        coreMesh.rotation.x += 0.005;
+        coreMesh.rotation.y += 0.008;
+      }
+      if (wireframeMesh) {
+        wireframeMesh.rotation.x -= 0.003;
+        wireframeMesh.rotation.y += 0.004;
+      }
+      if (ringGroup) {
+        ringGroup.rotation.y += 0.002;
+        ringGroup.rotation.z += 0.001;
+      }
+
+      // Smooth Mouse Parallax Lerp
+      scene.rotation.y += (targetRotationY - scene.rotation.y) * 0.05;
+      scene.rotation.x += (targetRotationX - scene.rotation.x) * 0.05;
+
+      // Scroll Parallax
+      const scrollY = window.scrollY || window.pageYOffset;
+      camera.position.y = -scrollY * 0.002;
+
+      renderer.render(scene, camera);
+    }
+
+    /* Trigger 3D Core Pulse Animation on Button Click */
+    document.getElementById('interact-core-btn').addEventListener('click', () => {
+      playAudioBeep(640, 'triangle', 0.2);
+      let scale = 1;
+      const interval = setInterval(() => {
+        scale += 0.05;
+        if (scale > 1.4) {
+          clearInterval(interval);
+          const shrink = setInterval(() => {
+            scale -= 0.05;
+            if (scale <= 1) {
+              scale = 1;
+              clearInterval(shrink);
+            }
+            if (coreMesh) coreMesh.scale.set(scale, scale, scale);
+            if (wireframeMesh) wireframeMesh.scale.set(scale, scale, scale);
+          }, 20);
+        }
+        if (coreMesh) coreMesh.scale.set(scale, scale, scale);
+        if (wireframeMesh) wireframeMesh.scale.set(scale, scale, scale);
+      }, 20);
+    });
+
+    /* ========================================================
+       2. CARD 3D TILT EFFECT FOR TOUCH & MOUSE
+    ======================================================== */
+    const holoCards = document.querySelectorAll('.holo-card');
+    holoCards.forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = ((y - centerY) / centerY) * -7;
+        const rotateY = ((x - centerX) / centerX) * 7;
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+      });
+    });
+
+    /* ========================================================
+       3. AUDIO SYNTHESIZER FEEDBACK SIMULATOR
+    ======================================================== */
+    let audioEnabled = true;
+    let audioCtx = null;
+
+    function playAudioBeep(freq = 440, type = 'sine', duration = 0.1) {
+      if (!audioEnabled) return;
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {
+        // AudioContext restricted before gesture
+      }
+    }
+
+    const audioToggleBtn = document.getElementById('audio-toggle');
+    const audioIcon = document.getElementById('audio-icon');
+    audioToggleBtn.addEventListener('click', () => {
+      audioEnabled = !audioEnabled;
+      if (audioEnabled) {
+        audioIcon.classList.remove('text-zinc-600');
+        audioIcon.classList.add('text-emerald-400');
+        playAudioBeep(880, 'sine', 0.15);
+      } else {
+        audioIcon.classList.remove('text-emerald-400');
+        audioIcon.classList.add('text-zinc-600');
+      }
+    });
+
+    /* Add hover click feedback to buttons */
+    document.querySelectorAll('button, a').forEach(el => {
+      el.addEventListener('mouseenter', () => playAudioBeep(520, 'sine', 0.05));
+    });
+
+    /* ========================================================
+       4. PROJECT TELEMETRY DATA & MODAL HANDLER
+    ======================================================== */
+    const projectTelemetry = {
+      memoryMirage: {
+        title: "Memory Mirage",
+        subtitle: "LLM Hallucination Mitigation & Adversarial Security Framework",
+        description: "An automated AI defense shield architected to eliminate factual hallucinations, detect semantic drift, and neutralize prompt injections before they compromise enterprise workflows. Combines mathematical vector groundings with real-time probabilistic entropy calculations.",
+        bullets: [
+          "RAG policy enforcement via ChromaDB and Sentence-Transformers with Cosine Similarity checks.",
+          "Token Entropy evaluation using Shannon Entropy to isolate and suppress ungrounded outputs.",
+          "Real-time heuristic & semantic self-consistency checking against corporate compliance vectors."
+        ],
+        metrics: [
+          "Hallucination Drift Reduction: 78.4%",
+          "Evaluation Latency: <85ms",
+          "Adversarial Prompt Block Rate: 99.2%"
+        ],
+        tags: ["FastAPI", "ChromaDB", "Sentence-Transformers", "React", "Shannon Entropy", "Python"]
+      },
+      pachaCover: {
+        title: "Pacha Cover",
+        subtitle: "Geospatial AI & Urban Canopy Restoration Platform",
+        description: "An environmental intelligence infrastructure designed to combat Bengaluru's worsening urban heat islands. Ingests multispectral satellite imagery from Google Earth Engine and utilizes Gemini 1.5 Flash to synthesize native ecological prescriptions.",
+        bullets: [
+          "Continuous satellite radar and multispectral vegetative indexing for 198 BBMP wards.",
+          "Generative 'Precision Prescription' engine mapping soil and land-use data to native tree varieties.",
+          "Automated citizen sapling photo verification using Vertex AI Vision."
+        ],
+        metrics: [
+          "Ward Analysis Coverage: 100% (198 Wards)",
+          "Sapling Verification Accuracy: 94.1%",
+          "Serverless Response via Cloud Run: ~120ms"
+        ],
+        tags: ["Google Earth Engine", "Gemini 1.5 Flash", "Vertex AI Vision", "FastAPI", "Cloud Run", "Firebase"]
+      },
+      swachhConnect: {
+        title: "Swachh Connect",
+        subtitle: "Crowdsourced Civic Waste AI & Micro-Tendering Platform",
+        description: "Engineered as an agile, zero-CAPEX software alternative to Mysuru City Corporation's stalled ₹50 Lakh CCTV surveillance plan. Crowdsources real-time waste alerts paired with computer vision and instant spatial micro-tendering.",
+        bullets: [
+          "PyTorch convolutional vision pipeline verifying solid waste with ≥85% confidence score.",
+          "Anti-spoof GPS validation through strict EXIF telemetry and geolocation bounds checks.",
+          "Automated spatial micro-tendering using PostGIS (ST_DWithin) and automated UPI transfers via RazorpayX."
+        ],
+        metrics: [
+          "Monitored Hotspots: 133 Vulnerable Sites",
+          "Micro-Tender Clearance Turnaround: <4 Hours",
+          "CAPEX Saved: ₹50 Lakhs"
+        ],
+        tags: ["PyTorch", "PostGIS", "FastAPI", "RazorpayX API", "EXIF Verification", "PostgreSQL"]
+      },
+      diabetIq: {
+        title: "DiabetIQ & Slice",
+        subtitle: "Multimodal Diagnostic & OCR Settlement Intelligence",
+        description: "A dual engineering project showcasing clinical explainability and document computer vision. DiabetIQ applies explainable AI to clinical classifiers, while Slice delivers OCR itemization for split-cost settlements.",
+        bullets: [
+          "Trained XGBoost models with SHAP (SHapley Additive exPlanations) to provide patients interpretable risk factors.",
+          "PaddleOCR invoice extraction engine capable of isolating line items and tax amounts.",
+          "Streamlit & FastAPI hybrid architecture for rapid client interactions."
+        ],
+        metrics: [
+          "Clinical Prediction Accuracy: 91.8%",
+          "OCR Receipt Parsing F1: 0.93",
+          "Inference Time: 45ms"
+        ],
+        tags: ["XGBoost", "SHAP", "PaddleOCR", "Streamlit", "Python", "LangChain"]
+      }
+    };
+
+    const projectModal = document.getElementById('project-modal');
+    function openProjectModal(key) {
+      const data = projectTelemetry[key];
+      if (!data) return;
+
+      document.getElementById('modal-title').textContent = data.title;
+      document.getElementById('modal-subtitle').textContent = data.subtitle;
+      document.getElementById('modal-description').textContent = data.description;
+
+      const bulletsContainer = document.getElementById('modal-bullets');
+      bulletsContainer.innerHTML = data.bullets.map(b => `
+        <li class="flex items-start gap-2">
+          <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-cyan-400 shrink-0 mt-0.5"></i>
+          <span>${b}</span>
+        </li>
+      `).join('');
+
+      const metricsContainer = document.getElementById('modal-metrics');
+      metricsContainer.innerHTML = data.metrics.map(m => `
+        <div class="flex items-center justify-between p-2 rounded bg-white/5 border border-white/5">
+          <span>${m.split(':')[0]}:</span>
+          <span class="text-cyan-400 font-bold">${m.split(':')[1]}</span>
+        </div>
+      `).join('');
+
+      const tagsContainer = document.getElementById('modal-tags');
+      tagsContainer.innerHTML = data.tags.map(t => `
+        <span class="px-2.5 py-1 rounded bg-white/5 text-zinc-300 border border-white/5">${t}</span>
+      `).join('');
+
+      projectModal.classList.remove('hidden');
+      projectModal.classList.add('flex');
+      lucide.createIcons();
+      playAudioBeep(600, 'sine', 0.1);
+    }
+
+    function closeProjectModal() {
+      projectModal.classList.add('hidden');
+      projectModal.classList.remove('flex');
+    }
+
+    document.getElementById('close-project-modal-btn').addEventListener('click', closeProjectModal);
+    projectModal.addEventListener('click', (e) => {
+      if (e.target === projectModal) closeProjectModal();
+    });
+
+    /* ========================================================
+       5. INTERACTIVE CLI DOSSIER TERMINAL
+    ======================================================== */
+    const terminalModal = document.getElementById('terminal-modal');
+    const terminalTrigger = document.getElementById('terminal-trigger');
+    const heroResumeBtn = document.getElementById('hero-resume-btn');
+    const closeTerminalBtn = document.getElementById('close-terminal-btn');
+    const terminalInput = document.getElementById('terminal-input');
+    const terminalHistory = document.getElementById('terminal-history');
+
+    function toggleTerminal(show = true) {
+      if (show) {
+        terminalModal.classList.remove('hidden');
+        terminalModal.classList.add('flex');
+        terminalInput.focus();
+        playAudioBeep(700, 'triangle', 0.1);
+      } else {
+        terminalModal.classList.add('hidden');
+        terminalModal.classList.remove('flex');
+      }
+    }
+
+    terminalTrigger.addEventListener('click', () => toggleTerminal(true));
+    heroResumeBtn.addEventListener('click', () => toggleTerminal(true));
+    closeTerminalBtn.addEventListener('click', () => toggleTerminal(false));
+    terminalModal.addEventListener('click', (e) => {
+      if (e.target === terminalModal) toggleTerminal(false);
+    });
+
+    const cliResponses = {
+      help: `AVAILABLE COMMANDS:
+  <span class="text-cyan-300">whoami</span>       : Profile summary & credentials
+  <span class="text-cyan-300">cat skills</span>   : Core technical capabilities
+  <span class="text-cyan-300">ls projects</span>  : List major software architectures
+  <span class="text-cyan-300">curl resume</span>  : Print academic & work dossier
+  <span class="text-cyan-300">awards</span>       : Hackathon accolades
+  <span class="text-cyan-300">contact</span>      : Reach out directly
+  <span class="text-cyan-300">clear</span>        : Reset console screen`,
+      
+      whoami: `NAME: Mahek Fathima
+ROLE: Full-Stack & Generative AI Engineer
+INSTITUTION: Maharaja Institute of Technology Mysuru (BE ISE, 2023-2027)
+CGPA: 8.20 / 10.0
+LOCATION: Mysuru, Karnataka, India
+STATUS: Python Full Stack Intern @ Pentagon Space | Open for 2027 Engineering Roles`,
+
+      'cat skills': `ENGINEERING MATRIX:
+[+] Backend   : Python, FastAPI, Django, PostgreSQL, SQL, AsyncIO, REST APIs
+[+] AI/ML     : Gemini 1.5 Flash, PyTorch, LangChain, ChromaDB, Sentence-Transformers
+[+] Spatial   : Google Earth Engine, PostGIS, Vertex AI Vision, Cloud Run
+[+] Agentic   : Antigravity, Claude, Prompt Engineering, LLM Red Teaming`,
+
+      'ls projects': `DIRECTORY // ACTIVE TELEMETRY:
+1. memory-mirage/      [LLM Hallucination & Security Firewall]
+2. pacha-cover/        [Geospatial AI & Canopy Restoration]
+3. swachh-connect/     [Civic PyTorch Vision & PostGIS Micropayments]
+4. diabetiq-slice/     [Explainable AI & Multimodal OCR]`,
+
+      'curl resume': `DOSSIER // MAHEK FATHIMA:
+=====================================================
+- EDUCATION: BE in Information Science & Eng (MIT Mysuru, CGPA: 8.20)
+- EXPERIENCE: Python Full Stack Intern @ Pentagon Space (Sep 2026 - Present)
+  * Architecting asynchronous REST APIs with FastAPI
+  * End-to-end SQL pipeline query optimization
+- HONORS:
+  * Award of Excellence: Build for Bengaluru 2026 (Top out of 2000+)
+  * 1st Place: CypherX Cybersecurity Competition 2026
+=====================================================`,
+
+      awards: `ACCOLADES:
+★ Award of Excellence: Build for Bengaluru Hackathon 2026 (GDG Bangalore, REVA Univ)
+★ 1st Place: CypherX Cybersecurity 2026 (Steganography, CTF, Cryptography)
+★ Award of Excellence: EthnoTech Generative AI Distinction Program`,
+
+      contact: `COMMUNICATION CHANNELS:
+- Email   : mahekfathima31@email.com
+- LinkedIn: https://linkedin.com/in/mahekfathima
+- GitHub  : https://github.com/mahekfathima`
+    };
+
+    function runCliCommand(cmd) {
+      cmd = cmd.trim().toLowerCase();
+      const p = document.createElement('p');
+      p.className = 'text-emerald-400 font-semibold';
+      p.innerHTML = `visitor@mahek:~$ ${cmd}`;
+      terminalHistory.appendChild(p);
+
+      if (cmd === 'clear') {
+        terminalHistory.innerHTML = '';
+        return;
+      }
+
+      const res = document.createElement('div');
+      res.className = 'text-zinc-300 font-mono whitespace-pre-line leading-relaxed';
+
+      if (cliResponses[cmd]) {
+        res.innerHTML = cliResponses[cmd];
+      } else {
+        res.innerHTML = `<span class="text-red-400">Command not recognized: "${cmd}". Type <span class="underline">help</span> for command list.</span>`;
+      }
+      terminalHistory.appendChild(res);
+      terminalHistory.scrollTop = terminalHistory.scrollHeight;
+      playAudioBeep(500, 'sine', 0.08);
+    }
+
+    function handleTerminalSubmit() {
+      const val = terminalInput.value;
+      if (!val) return;
+      runCliCommand(val);
+      terminalInput.value = '';
+    }
+
+    terminalInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        handleTerminalSubmit();
+      }
+    });
+
+    /* ========================================================
+       6. ONE-CLICK EMAIL COPY TO CLIPBOARD
+    ======================================================== */
+    const copyEmailBtn = document.getElementById('copy-email-btn');
+    const copyEmailText = document.getElementById('copy-email-text');
+    copyEmailBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText('mahekfathima31@email.com').then(() => {
+        const original = copyEmailText.textContent;
+        copyEmailText.textContent = 'COPIED TO CLIPBOARD!';
+        copyEmailBtn.classList.add('bg-emerald-400', 'text-black');
+        playAudioBeep(800, 'triangle', 0.15);
+        setTimeout(() => {
+          copyEmailText.textContent = original;
+          copyEmailBtn.classList.remove('bg-emerald-400', 'text-black');
+        }, 2200);
+      });
+    });
+
+    /* ========================================================
+       7. WINDOW ONLOAD BOOTSTRAP
+    ======================================================== */
+    window.onload = function () {
+      initThree();
+      animate();
+    };
+  </script>
+</body>
+</html>
